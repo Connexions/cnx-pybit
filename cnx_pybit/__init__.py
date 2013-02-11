@@ -22,6 +22,7 @@ from bottle import response, Bottle
 import pybit
 from pybitweb.db import Database
 from pybitweb.controller import Controller
+from pybitweb import job
 import cnx_pybit
 from cnx_pybit import api
 
@@ -51,6 +52,10 @@ def get_app(settings, db, controller):
         response.headers['Access-Control-Allow-Methods'] = allowed_methods
 
     app.mount('/api', api.get_api_app(settings, db, controller))
+    # The status routes need mounted because the message handlers use
+    #   the build request information to send back to the orginal web
+    #   front-end which is populated by the recieving web front-end.
+    app.mount('/job', job.get_job_app(settings, db, controller))
     return app
 
 
