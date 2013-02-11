@@ -45,7 +45,6 @@ def get_api_app(settings, db, controller) :
             uri = data['uri']
             method = data.get('method', '')
             vcs_id = data.get('vcs_id', '')
-            commands = data.get('commands', '')
             slave = data.get('slave', 'false')
         except KeyError as err:
             raise err
@@ -60,12 +59,12 @@ def get_api_app(settings, db, controller) :
                               "Transport(" + param_string([None, method,
                                                            uri, vcs_id]) + \
                               ")",
-                              commands]) \
+                              ]) \
               + ")")
 
         # Pass to controller to queue up
         transport = Transport(None, method, uri, vcs_id)
         controller.process_job(dist, arch, version, package,
-                               suite, pkg_format, transport, commands)
+                               suite, pkg_format, transport)
 
     return app
